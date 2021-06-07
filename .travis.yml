@@ -1,0 +1,14 @@
+dist: trusty
+language: java
+
+jdk:
+- openjdk11
+addons:
+  sonarcloud:
+    organization: "chiacchius"
+    token:
+      secure: "e6pHT6QVxi4MGkVZGA6Eooiu+UZvvZV/ILxrziEtXRnSgBHf1YudFrn1d6NeF51oTMKKPZ2z8f0yb7K7MBGYTkZfwPHvClXslgmbaoH67on2eXFDiNm3WWWzxTnANbojVF1EOFSjnpBF7S73Ei1snp71FbsN1qKoBdIu4Tg3q1cwH+V5UPenSzqCUTpTlbt2h7htFl3rI1nfeF7Wtljj19DuNHTELvzWmSv3aWoAIZvPyJcqOlYOAUdhFYtjUF5M+/mkH9579R2P2oXxnIrMQW0yyZnQUH1tLs2RdtEcPd/iuVk3DDFjJt0VaydLv8n7f87Iqs4ZvE1aj/87p/nYPJCEtMQ7GSJX0+yxK4VPAby7VDEnKFAJK8aCEDJta0zxX3Tb7lRYtjXF/1leANv1+sFpHY3NmvqhwvZsc+To9R/9cuo5gLiLoZ63i1RgSwftm8PjBD9Ngo4wIsaZq484lv5r+2xcNkCVKu72Tqrwm7MY2YUYahi84K8GQGp0QKHdoiONedJ2Ybw9cALexqF5NsKrn3/NCZB0bzHhl5U8K4wKvJiC6Qem/mriTUvpzJ5Aq8FZkewjlgiGOJxsb92n1hBjIlSeivAFSOq0v39gCZE6FAicKnGNBGlj8vgaeSWNGaYZ7Opk4a6LPuKwlzejqH5jMSSiGSj5V4EcA40kqlc=" # encrypted value of your token
+
+script:
+  # the following command line builds the project, runs the tests with coverage and then execute the SonarCloud analysis
+  - mvn clean verify sonar:sonar -Dsonar.login=e315a538d90e4318286f0c91d9aeda71e02c1e7e
