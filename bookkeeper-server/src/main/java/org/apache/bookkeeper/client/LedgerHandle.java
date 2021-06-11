@@ -92,6 +92,7 @@ import org.slf4j.LoggerFactory;
  * Ledger handle contains ledger metadata and is used to access the read and
  * write operations to a ledger.
  */
+@SuppressWarnings("JavadocReference")
 public class LedgerHandle implements WriteHandle {
     static final Logger LOG = LoggerFactory.getLogger(LedgerHandle.class);
 
@@ -108,7 +109,8 @@ public class LedgerHandle implements WriteHandle {
         OPEN,
         CLOSED
     }
-
+   
+    
     private HandleState handleState = HandleState.OPEN;
     private final CompletableFuture<Void> closePromise = new CompletableFuture<>();
 
@@ -1048,8 +1050,13 @@ public class LedgerHandle implements WriteHandle {
                     + ") or length(" + length + ")");
         }
 
+
+
         asyncAddEntry(Unpooled.wrappedBuffer(data, offset, length), cb, ctx);
     }
+    
+    
+    
 
     public void asyncAddEntry(ByteBuf data, final AddCallback cb, final Object ctx) {
         PendingAddOp op = PendingAddOp.create(this, clientCtx, getCurrentEnsemble(), data, writeFlags, cb, ctx);
@@ -1238,6 +1245,7 @@ public class LedgerHandle implements WriteHandle {
         }
         return true;
     }
+    
 
     protected boolean waitForWritable(DistributionSchedule.WriteSet writeSet,
                                     int allowedNonWritableCount, long durationMs) {
