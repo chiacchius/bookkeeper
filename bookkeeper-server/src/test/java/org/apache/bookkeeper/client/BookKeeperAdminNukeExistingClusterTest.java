@@ -27,6 +27,8 @@ import org.junit.runners.Parameterized;
 public class BookKeeperAdminNukeExistingClusterTest{
 
     private boolean expectedResult;
+
+
     private ZooKeeperCluster zkc;
     private Cluster cluster;
 
@@ -52,7 +54,7 @@ public class BookKeeperAdminNukeExistingClusterTest{
                 cluster.setInstanceId(instanceId);
 
             }
-            System.out.println("cluster initilized");
+            System.out.println("cluster initialized");
 
 
         }
@@ -80,16 +82,16 @@ public class BookKeeperAdminNukeExistingClusterTest{
     @Parameterized.Parameters
     public static Collection<?> getParameters(){
         return Arrays.asList(new Object[][] {
-                {new Cluster(null, "/ledgers",  "7657328", true, true, true), false},
-                {new Cluster(new ServerConfiguration(), "/ledgers", "7657328", true, true, true), true},
+                {false, new Cluster(null, "/ledgers",  "7657328", true, true, true)},
+                {true, new Cluster(new ServerConfiguration(), "/ledgers", "7657328", true, true, true)},
 
         });
     }
 
-    public BookKeeperAdminNukeExistingClusterTest(Cluster cluster, boolean expectedResult) {
-        this.cluster = cluster;
-        this.expectedResult = expectedResult;
+    public BookKeeperAdminNukeExistingClusterTest( boolean expectedResult, Cluster cluster) {
 
+        this.expectedResult = expectedResult;
+        this.cluster = cluster;
         System.out.println("test initialized");
 
 

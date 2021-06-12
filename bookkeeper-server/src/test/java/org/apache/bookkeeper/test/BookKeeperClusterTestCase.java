@@ -29,12 +29,7 @@ import io.netty.buffer.ByteBufAllocator;
 import java.io.File;
 import java.io.IOException;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
-import java.util.OptionalInt;
+import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
 import java.util.concurrent.SynchronousQueue;
@@ -46,6 +41,8 @@ import org.apache.bookkeeper.bookie.Bookie;
 import org.apache.bookkeeper.bookie.BookieException;
 import org.apache.bookkeeper.bookie.BookieImpl;
 import org.apache.bookkeeper.client.BookKeeperTestClient;
+import org.apache.bookkeeper.client.LedgerEntry;
+import org.apache.bookkeeper.client.LedgerHandle;
 import org.apache.bookkeeper.common.allocator.PoolingPolicy;
 import org.apache.bookkeeper.conf.AbstractConfiguration;
 import org.apache.bookkeeper.conf.ClientConfiguration;
@@ -794,6 +791,8 @@ public abstract class BookKeeperClusterTestCase {
     public TestStatsProvider getStatsProvider(int index) throws Exception {
         return servers.get(index).getStatsProvider();
     }
+
+    public abstract void readComplete(int rc, LedgerHandle lh, Enumeration<LedgerEntry> seq, Object ctx);
 
     /**
      * Class to encapsulate all the test objects.

@@ -1,8 +1,6 @@
 package org.apache.bookkeeper.client;
 
 
-import org.apache.bookkeeper.conf.ClientConfiguration;
-import org.apache.bookkeeper.conf.TestBKConfiguration;
 import org.apache.bookkeeper.test.BookKeeperClusterTestCase;
 import org.junit.After;
 import org.junit.Assert;
@@ -23,24 +21,23 @@ import java.util.Enumeration;
 @RunWith(value = Parameterized.class)
 public class LedgerHandleAsyncAddEntryTest extends BookKeeperClusterTestCase implements AsyncCallback.AddCallback{
 
+    private boolean expectedResult;
 
     private static LedgerHandle lh;
-
     private byte[] data;
     private int offset;
     private int lenght;
-    private AsyncCallback.AddCallback cb;   //bisogna implementare callbackinterface
-    private boolean expectedRes;
-    private static MySyncObject sync;       //corrisponde a Object ctx, cioè un ogetto di CONTROLLO
-    //SyncObj controlla che tutte le entry siano scritte nel Ledger andandole a contare
+    private AsyncCallback.AddCallback cb;
+
+    private static MySyncObject sync;       //Object ctx
 
 
-    private boolean isCbValid;
+    private boolean isCbValid; //if cb is valid or is null
 
     public LedgerHandleAsyncAddEntryTest(boolean expectedRes, byte[] data, int offset, int lenght, boolean isCbValid, MySyncObject sync) {
         super(3);
 
-        this.expectedRes=expectedRes;
+        this.expectedResult =expectedRes;
         this.data=data;
         this.offset=offset;
         this.lenght=lenght;
@@ -51,7 +48,7 @@ public class LedgerHandleAsyncAddEntryTest extends BookKeeperClusterTestCase imp
 
     @Before
     public void setup(){
-        // creazione del ledger
+        // ledger creation
 
         sync = new MySyncObject();
         byte[] ledgerPassword = "pwd".getBytes();
@@ -63,47 +60,45 @@ public class LedgerHandleAsyncAddEntryTest extends BookKeeperClusterTestCase imp
             e.printStackTrace();
         }
 
-        System.out.println("\n------------------------- Ledger ID: " + lh.getId());
+        System.out.println("Ledger created with ID: " + lh.getId());
 
     }
 
 
-    //addComplete notifica al SyncObj che la scrittura è stata completata
+
     @Override
     public void addComplete(int rc, LedgerHandle lh, long entryId, Object ctx) {
+
         MySyncObject sync = (MySyncObject) ctx;
         sync.setReturnCode(rc);
         synchronized (sync) {
             sync.counter++;
-            sync.notify();
+            sync.notify(); //notify sync if a write was completed
         }
     }
 
 
-
     @Parameterized.Parameters
     public static Collection<?> getTestParameters() {
-        byte[] data = {'h','e','l','l','o'};
-        byte[] bytes2 = {'1','2','3'};
-
+        byte[] data = {'m','a','t','t','e', 'o'};
         return Arrays.asList(new Object[][] {
 
-                /*FALSE se :
+                /* FALSE if :
                 1. offset <0
                 2. lenght <0
                 3. offset + lenght > len(data)
                  */
 
+
+
                 //boolean expectedRes, byte[] data, int offset, int lenght, AsyncCallback.AddCallback cb, AsyncHelper.SyncObj sync
-
-
                 {true, data, 0, data.length, true, sync},
                 //{true, data, 2, data.length-2, true, sync},
                 {false, data, -1, data.length, true, sync},
                 {false, data, 2, -1, true, sync},
                 //{false, data, -1, data.length+2, true, sync},
                 {false, data, 2, 5, true, sync},
-                //{false, data, 0, data.length, false, sync}, //fallisce perche non arriva notifica di completamento al SyncObj
+                //{false, data, 0, data.length, false, sync}, //fallisce perche non arriva notifica di completamento al MySyncObject
                 {true, data, 0, data.length, true, null},
 
         });
@@ -116,42 +111,42 @@ public class LedgerHandleAsyncAddEntryTest extends BookKeeperClusterTestCase imp
         super.tearDown();
     }
 
+    @Override
+    public void readComplete(int rc, LedgerHandle lh, Enumeration<LedgerEntry> seq, Object ctx) {
+
+    }
 
 
     @Test
     public void myTest(){
 
-        boolean res;
+        boolean result;
 
         try {
-            res = true;
+            result = true;
 
             if (isCbValid) {
-                //System.out.println("\n--------isCbValid: "+isCbValid+"  -> this");
                 lh.asyncAddEntry(data, offset, lenght, this, sync);
-
-
-
 
             }
             else{
-                //System.out.println("\n--------isCbValid: "+isCbValid+"  -> null");
+                //cb = null if it isn't valid
                 lh.asyncAddEntry(data, offset, lenght, null, sync);
 
             }
 
 
         } catch (ArrayIndexOutOfBoundsException e) {
-            res= false;
+            result= false;
             e.printStackTrace();
 
         } catch (NullPointerException e){
-            res= false;
+            result= false;
             e.printStackTrace();
         }
 
-        // aspetta che tutte le entries siano aggiunte -> scrittura a buon fine
-        if (expectedRes){
+        // wait for all entries to be added -> writing completed
+        if (expectedResult){
             synchronized (sync) {
                 while (sync.counter < 1) {
 
@@ -162,19 +157,17 @@ public class LedgerHandleAsyncAddEntryTest extends BookKeeperClusterTestCase imp
                     }
                 }
                 if (sync.getReturnCode()!=BKException.Code.OK){
-                    res = false;
+                    result = false;
                 }
             }
         }
 
-        Assert.assertEquals(expectedRes,res);
-        System.out.println("\nres= "+res+"      expectedRes= "+expectedRes);
+        Assert.assertEquals(expectedResult,result);
+        System.out.println("\nres= "+result+"      expectedRes= "+ expectedResult);
 
-        //se ho aggiunto un entry (quindi ho effettuato write)
-        // voglio controllare che il contenuto della entry sia corretto, cioè
-        // che nella entry ci sia effettivamente ciò che avevo inserito prima
+        //check if in the entry there is what i wrote before
 
-        if (expectedRes){
+        if (expectedResult){
 
             int numEntries = 1;
             String actualEntry, expectedEntry;
