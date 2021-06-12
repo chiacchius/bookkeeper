@@ -1,68 +1,120 @@
 package org.apache.bookkeeper.client;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.apache.bookkeeper.util.BookKeeperConstants.AVAILABLE_NODE;
-import static org.apache.bookkeeper.util.BookKeeperConstants.READONLY;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import com.google.common.net.InetAddresses;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
-import java.util.Set;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
-import org.apache.bookkeeper.bookie.BookieImpl;
-import org.apache.bookkeeper.client.BookKeeper.DigestType;
-import org.apache.bookkeeper.client.api.LedgerMetadata;
-import org.apache.bookkeeper.common.component.ComponentStarter;
-import org.apache.bookkeeper.common.component.Lifecycle;
-import org.apache.bookkeeper.common.component.LifecycleComponent;
-import org.apache.bookkeeper.conf.ClientConfiguration;
+
+import java.util.*;
+
 import org.apache.bookkeeper.conf.ServerConfiguration;
-import org.apache.bookkeeper.conf.TestBKConfiguration;
-import org.apache.bookkeeper.discover.BookieServiceInfo;
-import org.apache.bookkeeper.meta.UnderreplicatedLedger;
-import org.apache.bookkeeper.meta.ZkLedgerUnderreplicationManager;
+
 import org.apache.bookkeeper.meta.zk.ZKMetadataDriverBase;
-import org.apache.bookkeeper.net.BookieId;
-import org.apache.bookkeeper.net.BookieSocketAddress;
-import org.apache.bookkeeper.proto.BookieServer;
-import org.apache.bookkeeper.replication.ReplicationException.UnavailableException;
-import org.apache.bookkeeper.server.Main;
-import org.apache.bookkeeper.server.conf.BookieConfiguration;
-import org.apache.bookkeeper.util.AvailabilityOfEntriesOfLedger;
+
+import org.apache.bookkeeper.test.ZooKeeperCluster;
+import org.apache.bookkeeper.test.ZooKeeperClusterUtil;
 import org.apache.bookkeeper.util.BookKeeperConstants;
-import org.apache.bookkeeper.util.PortManager;
-import org.apache.commons.io.FileUtils;
-import org.apache.zookeeper.CreateMode;
-import org.apache.zookeeper.ZooDefs.Ids;
+
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+
 
 /**
  * Test the bookkeeperAdmin method "nukeExistingCluster()"
  */
-
+@RunWith(value = Parameterized.class)
 public class BookKeeperAdminNukeExistingClusterTest{
 
+    private final boolean expectedResult;
+    private ZooKeeperCluster zkc;
+    private Cluster cluster;
 
 
+    @Before
+    public void setUp() throws Exception {
+
+
+        /**** initialize a cluster before nuke it ****/
+        try {
+            zkc= new ZooKeeperClusterUtil(7); // 7 zkNodes to avoid a IllegalArgumentException
+            zkc.startCluster();
+
+            if (cluster.getServerConfiguration()!=null){
+                cluster.getServerConfiguration().setMetadataServiceUri(zkc.getMetadataServiceUri());
+                BookKeeperAdmin.initNewCluster(cluster.getServerConfiguration()); //initialize cluster
+
+                byte[] data = zkc.getZooKeeperClient().getData(
+                        ZKMetadataDriverBase.resolveZkLedgersRootPath(cluster.getServerConfiguration()) + "/" + BookKeeperConstants.INSTANCEID,
+                        false, null);
+                String instanceId = new String(data, UTF_8);
+
+                cluster.setInstanceId(instanceId);
+
+            }
+            System.out.println("cluster initilized");
+
+
+        }
+        catch (Exception e) {
+            System.out.println("Failure in cluster initialization"); e.printStackTrace();
+        }
+
+
+
+
+    }
+
+    @After
+    public void tearDown() throws Exception {
+
+        System.out.println("Starting tear down");
+        zkc.getZooKeeperClient().close();
+        zkc.killCluster();
+        System.out.println("Tear down completed. Cluster killed");
+
+
+
+    }
+
+    @Parameterized.Parameters
+    public static Collection<?> getParameters(){
+        return Arrays.asList(new Object[][] {
+                {new Cluster(null, "/ledgers",  "7657328", true, true, true), false},
+                {new Cluster(new ServerConfiguration(), "/ledgers", "7657328", true, true, true), true},
+
+        });
+    }
+
+    public BookKeeperAdminNukeExistingClusterTest(Cluster cluster, boolean expectedResult) {
+        this.cluster = cluster;
+        this.expectedResult = expectedResult;
+
+        System.out.println("test initialized");
+
+
+    }
+
+
+    @Test
+    public void nukeExistingCluster() {
+
+        boolean result;
+        System.out.println("test started");
+        try {
+            result = BookKeeperAdmin.nukeExistingCluster(cluster.getServerConfiguration(), this.cluster.getLedgersRootPath(), cluster.getInstanceId(), cluster.isForce());
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            result = false;
+        }
+        System.out.println("test finished");
+
+        Assert.assertEquals(expectedResult, result);
+
+
+
+    }
 
 
 
