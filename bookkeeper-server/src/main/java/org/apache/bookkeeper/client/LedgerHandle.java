@@ -110,7 +110,6 @@ public class LedgerHandle implements WriteHandle {
         CLOSED
     }
    
-    
     private HandleState handleState = HandleState.OPEN;
     private final CompletableFuture<Void> closePromise = new CompletableFuture<>();
 

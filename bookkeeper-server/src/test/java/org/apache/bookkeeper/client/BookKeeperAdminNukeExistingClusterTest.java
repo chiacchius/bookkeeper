@@ -26,7 +26,7 @@ import org.junit.runners.Parameterized;
 @RunWith(value = Parameterized.class)
 public class BookKeeperAdminNukeExistingClusterTest{
 
-    private final boolean expectedResult;
+    private boolean expectedResult;
     private ZooKeeperCluster zkc;
     private Cluster cluster;
 

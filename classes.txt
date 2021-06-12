@@ -11,6 +11,6 @@ bookkeeper-server/src/main/java/org/apache/bookkeeper/client/LedgerHandle.java
 
 bookkeeper-server/src/main/java/org/apache/bookkeeper/client/BookKeeperAdmin.java
 
-	-public static boolean nukeExistingCluster(ServerConfiguration conf, String edgersRootPath, String instanceId, boolean force)
+	-public static boolean nukeExistingCluster(ServerConfiguration conf, String edgersRootPath, String instanceId, boolean force) [V]
 
 	-public static boolean format(ServerConfiguration conf, boolean isInteractive, boolean force)
