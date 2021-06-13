@@ -205,7 +205,7 @@
         <sonar.links.issue>https://github.com/chiacchius/bookkeeper/issues</sonar.links.issue>
         <aggregate.report.dir>tests/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir>
     </properties>
-    
+
     
     <!-- dependency definitions -->
     <dependencyManagement>
@@ -825,6 +825,16 @@
         <pluginManagement>
             <plugins>
                 <plugin>
+                    <groupId>org.sonarsource.scanner.maven</groupId>
+                    <artifactId>sonar-maven-plugin</artifactId>
+                    <version>3.6.0.1398</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>0.8.4</version>
+                </plugin>
+                <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-checkstyle-plugin</artifactId>
                     <version>${maven-checkstyle-plugin.version}</version>
@@ -834,6 +844,7 @@
                             <artifactId>checkstyle</artifactId>
                             <version>${puppycrawl.checkstyle.version}</version>
                         </dependency>
+
                     </dependencies>
                     <configuration>
                         <configLocation>buildtools/src/main/resources/bookkeeper/checkstyle.xml</configLocation>
