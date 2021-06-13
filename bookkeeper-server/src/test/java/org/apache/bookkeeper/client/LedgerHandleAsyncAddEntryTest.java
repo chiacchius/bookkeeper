@@ -111,10 +111,7 @@ public class LedgerHandleAsyncAddEntryTest extends BookKeeperClusterTestCase imp
         super.tearDown();
     }
 
-    @Override
-    public void readComplete(int rc, LedgerHandle lh, Enumeration<LedgerEntry> seq, Object ctx) {
 
-    }
 
 
     @Test
