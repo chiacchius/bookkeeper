@@ -206,6 +206,7 @@
         <aggregate.report.dir>tests/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir>
     </properties>
     
+    
     <!-- dependency definitions -->
     <dependencyManagement>
         <dependencies>
