@@ -24,7 +24,7 @@
     <version>4.15.0-SNAPSHOT</version>
     <artifactId>bookkeeper</artifactId>
     <packaging>pom</packaging>
-    <name>ApacheBookKeeper</name>
+    <name>Apache BookKeeper :: Parent</name>
     <url>http://bookkeeeper.apache.org</url>
     <inceptionYear>2011</inceptionYear>
     <licenses>
@@ -50,7 +50,7 @@
     </ciManagement>
     <modules>
         <module>buildtools</module>
-        <module>circe-checksum</module>
+        <!--<module>circe-checksum</module>-->
         <module>bookkeeper-common</module>
         <module>bookkeeper-common-allocator</module>
         <module>stats</module>
@@ -103,12 +103,15 @@
         </developer>
     </developers>
     <properties>
+        <aggregate.report.dir>tests/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.targer>11</maven.compiler.targer>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <javac.target>1.8</javac.target>
         <redirectTestOutputToFile>true</redirectTestOutputToFile>
         <testRetryCount>2</testRetryCount>
-        
+
         <!-- dependencies -->
         <arquillian-cube.version>1.18.2</arquillian-cube.version>
         <arquillian-junit.version>1.6.0.Final</arquillian-junit.version>
@@ -197,7 +200,7 @@
         <spotbugs-maven-plugin.version>3.1.8</spotbugs-maven-plugin.version>
         <forkCount.variable>1</forkCount.variable>
         <servlet-api.version>4.0.0</servlet-api.version>
-        
+
         <sonar.projectKey>chiacchius:${project.groupId}:${project.artifactId}</sonar.projectKey>
         <sonar.links.homepage>https://github.com/chiacchius/bookkeeper</sonar.links.homepage>
         <sonar.links.ci>https://travis-ci.com/github/chiacchius/bookkeeper</sonar.links.ci>
@@ -206,7 +209,7 @@
         <aggregate.report.dir>tests/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir>
     </properties>
 
-    
+
     <!-- dependency definitions -->
     <dependencyManagement>
         <dependencies>
@@ -241,7 +244,7 @@
                 <artifactId>freebuilder</artifactId>
                 <version>${freebuilder.version}</version>
             </dependency>
-            
+
             <!-- logging dependencies -->
             <dependency>
                 <groupId>org.slf4j</groupId>
@@ -258,7 +261,7 @@
                 <artifactId>log4j-over-slf4j</artifactId>
                 <version>${slf4j.version}</version>
             </dependency>
-            
+
             <!-- commons dependencies -->
             <dependency>
                 <groupId>commons-cli</groupId>
@@ -317,28 +320,28 @@
                 <artifactId>reflections</artifactId>
                 <version>${reflections.version}</version>
             </dependency>
-            
+
             <!-- compression libs -->
             <dependency>
                 <groupId>net.jpountz.lz4</groupId>
                 <artifactId>lz4</artifactId>
                 <version>${lz4.version}</version>
             </dependency>
-            
+
             <!-- JNA -->
             <dependency>
                 <groupId>net.java.dev.jna</groupId>
                 <artifactId>jna</artifactId>
                 <version>${jna.version}</version>
             </dependency>
-            
+
             <!-- yaml dependencies -->
             <dependency>
                 <groupId>org.yaml</groupId>
                 <artifactId>snakeyaml</artifactId>
                 <version>${snakeyaml.version}</version>
             </dependency>
-            
+
             <!-- jackson dependencies -->
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
@@ -376,21 +379,21 @@
                 <artifactId>jackson-mapper-asl</artifactId>
                 <version>${jackson-mapper-asl.version}</version>
             </dependency>
-            
+
             <!-- protobuf dependencies -->
             <dependency>
                 <groupId>com.google.protobuf</groupId>
                 <artifactId>protobuf-java</artifactId>
                 <version>${protobuf.version}</version>
             </dependency>
-            
+
             <!-- libthrift dependency -->
             <dependency>
                 <groupId>org.apache.thrift</groupId>
                 <artifactId>libthrift</artifactId>
                 <version>${libthrift9.version}</version>
             </dependency>
-            
+
             <!-- netty dependencies -->
             <dependency>
                 <groupId>io.netty</groupId>
@@ -463,7 +466,7 @@
                 <artifactId>netty-tcnative-boringssl-static</artifactId>
                 <version>${netty-boringssl.version}</version>
             </dependency>
-            
+
             <!-- grpc dependencies -->
             <dependency>
                 <groupId>io.grpc</groupId>
@@ -472,14 +475,14 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            
+
             <!-- rocksdb dependencies -->
             <dependency>
                 <groupId>org.rocksdb</groupId>
                 <artifactId>rocksdbjni</artifactId>
                 <version>${rocksdb.version}</version>
             </dependency>
-            
+
             <!-- zookeeper dependencies -->
             <dependency>
                 <groupId>org.apache.zookeeper</groupId>
@@ -532,14 +535,14 @@
                     </exclusion>
                 </exclusions>
             </dependency>
-            
+
             <dependency>
                 <!-- needed by ZooKeeper server -->
                 <groupId>org.xerial.snappy</groupId>
                 <artifactId>snappy-java</artifactId>
                 <version>${snappy.version}</version>
             </dependency>
-            
+
             <!-- curator dependencies -->
             <dependency>
                 <groupId>org.apache.curator</groupId>
@@ -552,7 +555,7 @@
                     </exclusion>
                 </exclusions>
             </dependency>
-            
+
             <!-- http server dependencies -->
             <dependency>
                 <groupId>io.vertx</groupId>
@@ -593,21 +596,21 @@
                 <artifactId>jetty-servlet</artifactId>
                 <version>${jetty.version}</version>
             </dependency>
-            
+
             <!-- JCTools -->
             <dependency>
                 <groupId>org.jctools</groupId>
                 <artifactId>jctools-core</artifactId>
                 <version>${jctools.version}</version>
             </dependency>
-            
+
             <!-- dropwizard metrics, for stats and for ZooKeeper server -->
             <dependency>
                 <groupId>io.dropwizard.metrics</groupId>
                 <artifactId>metrics-core</artifactId>
                 <version>${dropwizard.version}</version>
             </dependency>
-            
+
             <!-- stats dependencies -->
             <dependency>
                 <groupId>io.dropwizard.metrics</groupId>
@@ -641,28 +644,28 @@
                 <artifactId>sketches-core</artifactId>
                 <version>${datasketches.version}</version>
             </dependency>
-            
+
             <!-- http-client -->
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpclient</artifactId>
                 <version>${httpclient.version}</version>
             </dependency>
-            
+
             <!-- tools dependencies -->
             <dependency>
                 <groupId>com.beust</groupId>
                 <artifactId>jcommander</artifactId>
                 <version>${jcommander.version}</version>
             </dependency>
-            
+
             <!-- pref dependencies -->
             <dependency>
                 <groupId>org.hdrhistogram</groupId>
                 <artifactId>HdrHistogram</artifactId>
                 <version>${hdrhistogram.version}</version>
             </dependency>
-            
+
             <!-- test dependencies -->
             <dependency>
                 <groupId>junit</groupId>
@@ -742,7 +745,7 @@
                 <artifactId>testcontainers</artifactId>
                 <version>${testcontainers.version}</version>
             </dependency>
-            
+
             <!-- benchmark dependencies -->
             <dependency>
                 <groupId>org.openjdk.jmh</groupId>
@@ -756,7 +759,7 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-    
+
     <!-- dependencies for all modules -->
     <dependencies>
         <!-- provided dependencies (available at compilation and test classpths and *NOT* packaged) -->
@@ -770,7 +773,7 @@
             <artifactId>spotbugs-annotations</artifactId>
             <scope>provided</scope>
         </dependency>
-        
+
         <!-- compilation dependencies (available at all classpaths) -->
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -780,7 +783,7 @@
             <groupId>commons-configuration</groupId>
             <artifactId>commons-configuration</artifactId>
         </dependency>
-        
+
         <!-- test dependencies -->
         <dependency>
             <groupId>junit</groupId>
@@ -813,7 +816,7 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-    
+
     <build>
         <extensions>
             <extension>
@@ -971,25 +974,25 @@
                     <excludes>
                         <!-- Intellij -->
                         <exclude>**/.idea/**</exclude>
-                        
+
                         <!-- Git -->
                         <exclude>.git/**/*</exclude>
                         <exclude>.github/**/*</exclude>
                         <exclude>**/.gitignore</exclude>
-                        
+
                         <!-- SVN -->
                         <exclude>**/.svn/**/*</exclude>
-                        
+
                         <!-- Built directory -->
                         <exclude>**/target/**/*</exclude>
-                        
+
                         <!-- Project files -->
                         <exclude>**/README.md</exclude>
                         <exclude>**/README.rst</exclude>
                         <exclude>**/apidocs/*</exclude>
                         <exclude>**/src/main/resources/deps/**</exclude>
                         <exclude>**/META-INF/**</exclude>
-                        
+
                         <!-- IDE files (eclipse & intellij) -->
                         <exclude>**/.classpath</exclude>
                         <exclude>**/.project</exclude>
@@ -998,26 +1001,26 @@
                         <exclude>**/*.iml</exclude>
                         <exclude>**/*.iws</exclude>
                         <exclude>**/*.ipr</exclude>
-                        
+
                         <!-- Maven (CI builds) -->
                         <exclude>.repository/**</exclude>
-                        
+
                         <!-- Website -->
                         <exclude>site/**</exclude>
                         <exclude>site2/**</exclude>
-                        
+
                         <!-- Thrift generated files -->
                         <exclude>**/org/apache/distributedlog/thrift/*</exclude>
-                        
+
                         <!-- logs -->
                         <exclude>**/*.log</exclude>
-                        
+
                         <!-- data -->
                         <exclude>data/**</exclude>
-                        
+
                         <!-- vargrant -->
                         <exclude>dev/.vagrant/**</exclude>
-                        
+
                         <!-- protobuf generated python files-->
                         <exclude>**/proto/**.py</exclude>
                         <!-- python build/test env -->
@@ -1032,7 +1035,7 @@
                         <exclude>**/__pycache__/**</exclude>
                         <exclude>**/bookkeeper.egg-info/**</exclude>
                         <exclude>**/pip-selfcheck.json</exclude>
-                        
+
                         <!-- test resources -->
                         <exclude>**/test_conf_2.conf</exclude>
                     </excludes>
@@ -1052,6 +1055,7 @@
                     <plugin>
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
+                        <version>0.8.4</version>
                         <executions>
                             <execution>
                                 <id>prepare-agent</id>
@@ -1064,37 +1068,8 @@
                 </plugins>
             </build>
         </profile>
-        <profile>
-            <!-- profile used by jenkins CI -->
-            <id>code-coverage</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.eluder.coveralls</groupId>
-                        <artifactId>coveralls-maven-plugin</artifactId>
-                        <version>${coveralls-maven-plugin.version}</version>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <version>${maven-surefire-plugin.version}</version>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.jacoco</groupId>
-                        <artifactId>jacoco-maven-plugin</artifactId>
-                        <version>0.8.0</version>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>prepare-agent</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        
+
+
         <!-- the profiles below are only for development purpose -->
         <profile>
             <id>dev</id>
@@ -1137,7 +1112,7 @@
                 </plugins>
             </build>
         </profile>
-        
+
         <profile>
             <id>jdk11-no-spotbugs</id>
             <activation>
@@ -1155,7 +1130,7 @@
                 </plugins>
             </build>
         </profile>
-        
+
         <profile>
             <id>apache-release</id>
             <build>
