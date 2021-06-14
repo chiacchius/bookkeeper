@@ -446,6 +446,7 @@
                 <artifactId>netty-codec-socks</artifactId>
                 <version>${netty.version}</version>
             </dependency>
+            
             <dependency>
                 <groupId>io.netty</groupId>
                 <artifactId>netty-handler-proxy</artifactId>
