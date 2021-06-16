@@ -14,14 +14,10 @@ public class Cluster {
     private boolean force;
     private boolean useInstanceId;
 
-    public Cluster(ServerConfiguration serverConfiguration, String ledgersRootPath, String instanceId,
-                   boolean force, boolean configuration, boolean useInstanceId) {
+    public Cluster(ServerConfiguration serverConfiguration, boolean configuration, String ledgersRootPath) {
 
         this.serverConfiguration=serverConfiguration;
         this.ledgersRootPath = ledgersRootPath;
-        this.instanceId = instanceId;
-        this.force = force;
-        this.useInstanceId = useInstanceId;
 
         if (serverConfiguration!=null && configuration){
             doServerConfig();
