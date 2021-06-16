@@ -197,6 +197,10 @@
         <spotbugs-maven-plugin.version>3.1.8</spotbugs-maven-plugin.version>
         <forkCount.variable>1</forkCount.variable>
         <servlet-api.version>4.0.0</servlet-api.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
 
         <sonar.projectKey>chiacchius:${project.groupId}:${project.artifactId}</sonar.projectKey>
         <sonar.links.homepage>https://github.com/chiacchius/bookkeeper</sonar.links.homepage>
@@ -205,6 +209,8 @@
         <sonar.links.issue>https://github.com/chiacchius/bookkeeper/issues</sonar.links.issue>
         <aggregate.report.dir>tests/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir>
     </properties>
+
+
 
 
     <!-- dependency definitions -->
@@ -552,6 +558,12 @@
                     </exclusion>
                 </exclusions>
             </dependency>
+            <dependency>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy-all</artifactId>
+                <version>3.0.8</version>
+                <type>pom</type>
+            </dependency>
 
             <!-- http server dependencies -->
             <dependency>
@@ -824,16 +836,30 @@
         </extensions>
         <pluginManagement>
             <plugins>
+
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven-compiler-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <phase>verify</phase>
+                        </execution>
+                    </executions>
+                </plugin>
                 <plugin>
                     <groupId>org.sonarsource.scanner.maven</groupId>
                     <artifactId>sonar-maven-plugin</artifactId>
-                    <version>3.6.0.1398</version>
+                    <version>3.7.0.1746</version>
                 </plugin>
                 <plugin>
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
                     <version>0.8.4</version>
-                </plugin>
+               </plugin>
+
+
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-checkstyle-plugin</artifactId>
@@ -844,7 +870,6 @@
                             <artifactId>checkstyle</artifactId>
                             <version>${puppycrawl.checkstyle.version}</version>
                         </dependency>
-
                     </dependencies>
                     <configuration>
                         <configLocation>buildtools/src/main/resources/bookkeeper/checkstyle.xml</configLocation>
@@ -895,15 +920,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin.version}</version>
-                <configuration>
-                    <argLine>-Xmx2G -Djava.net.preferIPv4Stack=true -Dio.netty.leakDetection.level=paranoid</argLine>
-                    <redirectTestOutputToFile>${redirectTestOutputToFile}</redirectTestOutputToFile>
-                    <forkCount>${forkCount.variable}</forkCount>
-                    <reuseForks>false</reuseForks>
-                    <trimStackTrace>false</trimStackTrace>
-                    <forkedProcessTimeoutInSeconds>1800</forkedProcessTimeoutInSeconds>
-                    <rerunFailingTestsCount>${testRetryCount}</rerunFailingTestsCount>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -963,90 +979,21 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.apache.rat</groupId>
-                <artifactId>apache-rat-plugin</artifactId>
-                <version>${apache-rat-plugin.version}</version>
-                <configuration>
-                    <excludes>
-                        <!-- Intellij -->
-                        <exclude>**/.idea/**</exclude>
-
-                        <!-- Git -->
-                        <exclude>.git/**/*</exclude>
-                        <exclude>.github/**/*</exclude>
-                        <exclude>**/.gitignore</exclude>
-
-                        <!-- SVN -->
-                        <exclude>**/.svn/**/*</exclude>
-
-                        <!-- Built directory -->
-                        <exclude>**/target/**/*</exclude>
-
-                        <!-- Project files -->
-                        <exclude>**/README.md</exclude>
-                        <exclude>**/README.rst</exclude>
-                        <exclude>**/apidocs/*</exclude>
-                        <exclude>**/src/main/resources/deps/**</exclude>
-                        <exclude>**/META-INF/**</exclude>
-
-                        <!-- IDE files (eclipse & intellij) -->
-                        <exclude>**/.classpath</exclude>
-                        <exclude>**/.project</exclude>
-                        <exclude>**/.checkstyle</exclude>
-                        <exclude>**/.settings/*</exclude>
-                        <exclude>**/*.iml</exclude>
-                        <exclude>**/*.iws</exclude>
-                        <exclude>**/*.ipr</exclude>
-
-                        <!-- Maven (CI builds) -->
-                        <exclude>.repository/**</exclude>
-
-                        <!-- Website -->
-                        <exclude>site/**</exclude>
-                        <exclude>site2/**</exclude>
-
-                        <!-- Thrift generated files -->
-                        <exclude>**/org/apache/distributedlog/thrift/*</exclude>
-
-                        <!-- logs -->
-                        <exclude>**/*.log</exclude>
-
-                        <!-- data -->
-                        <exclude>data/**</exclude>
-
-                        <!-- vargrant -->
-                        <exclude>dev/.vagrant/**</exclude>
-
-                        <!-- protobuf generated python files-->
-                        <exclude>**/proto/**.py</exclude>
-                        <!-- python build/test env -->
-                        <exclude>**/python/.coverage</exclude>
-                        <exclude>**/python/.Python</exclude>
-                        <exclude>**/python/bin/**</exclude>
-                        <exclude>**/python/include/**</exclude>
-                        <exclude>**/python/lib/**</exclude>
-                        <exclude>**/**.pyc</exclude>
-                        <exclude>**/.nox/**</exclude>
-                        <exclude>**/.pytest_cache/**</exclude>
-                        <exclude>**/__pycache__/**</exclude>
-                        <exclude>**/bookkeeper.egg-info/**</exclude>
-                        <exclude>**/pip-selfcheck.json</exclude>
-
-                        <!-- test resources -->
-                        <exclude>**/test_conf_2.conf</exclude>
-                    </excludes>
-                    <consoleOutput>true</consoleOutput>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
     <profiles>
         <profile>
             <id>coverage</id>
             <activation>
-                <activeByDefault>true</activeByDefault>
+                <property>
+                    <name>coverage</name>
+                    <value>true</value>
+                </property>
             </activation>
+            <properties>
+                <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+                <sonar.organization>chiacchius</sonar.organization>
+            </properties>
             <build>
                 <plugins>
                     <plugin>
@@ -1061,116 +1008,9 @@
                             </execution>
                         </executions>
                     </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <!-- profile used by jenkins CI -->
-            <id>code-coverage</id>
-            <build>
-                <plugins>
                     <plugin>
-                        <groupId>org.eluder.coveralls</groupId>
-                        <artifactId>coveralls-maven-plugin</artifactId>
-                        <version>${coveralls-maven-plugin.version}</version>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <version>${maven-surefire-plugin.version}</version>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.jacoco</groupId>
-                        <artifactId>jacoco-maven-plugin</artifactId>
-                        <version>0.8.0</version>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>prepare-agent</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-
-        <!-- the profiles below are only for development purpose -->
-        <profile>
-            <id>dev</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <version>${maven-surefire-plugin.version}</version>
-                        <configuration>
-                            <argLine>-Xmx2G -Djava.net.preferIPv4Stack=true</argLine>
-                            <redirectTestOutputToFile>false</redirectTestOutputToFile>
-                            <forkCount>${forkCount.variable}</forkCount>
-                            <reuseForks>false</reuseForks>
-                            <forkedProcessTimeoutInSeconds>1800</forkedProcessTimeoutInSeconds>
-                            <trimStackTrace>false</trimStackTrace>
-                            <rerunFailingTestsCount>0</rerunFailingTestsCount>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>dev-debug</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <version>${maven-surefire-plugin.version}</version>
-                        <configuration>
-                            <argLine>-Xmx2G -Djava.net.preferIPv4Stack=true -Dbookkeeper.root.logger=DEBUG,CONSOLE</argLine>
-                            <redirectTestOutputToFile>false</redirectTestOutputToFile>
-                            <forkCount>${forkCount.variable}</forkCount>
-                            <reuseForks>false</reuseForks>
-                            <forkedProcessTimeoutInSeconds>1800</forkedProcessTimeoutInSeconds>
-                            <trimStackTrace>false</trimStackTrace>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-
-        <profile>
-            <id>jdk11-no-spotbugs</id>
-            <activation>
-                <jdk>[11,)</jdk>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>com.github.spotbugs</groupId>
-                        <artifactId>spotbugs-maven-plugin</artifactId>
-                        <configuration>
-                            <skip>true</skip>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-
-        <profile>
-            <id>apache-release</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <artifactId>maven-assembly-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>source-release-assembly</id>
-                                <configuration>
-                                    <!-- we have a dedicated distribution module in bookkeeper-dist -->
-                                    <skipAssembly>true</skipAssembly>
-                                </configuration>
-                            </execution>
-                        </executions>
+                        <groupId>org.sonarsource.scanner.maven</groupId>
+                        <artifactId>sonar-maven-plugin</artifactId>
                     </plugin>
                 </plugins>
             </build>
