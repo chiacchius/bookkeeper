@@ -39,8 +39,7 @@ public class BookKeeperAdminInitNewClusterTest {
         try {
 
             zk = new ZooKeeperClusterUtil(5);
-            zk.startCluster();
-
+            //zk.startCluster();
 
 
             System.out.println("Cluster Zookeeper inizializzato e running");
@@ -81,10 +80,10 @@ public class BookKeeperAdminInitNewClusterTest {
     public static Collection<?> getParameters(){
         return Arrays.asList(new Object[][] {
                 {new Cluster(new ServerConfiguration(), false, ""), false},
-                {new Cluster(new ServerConfiguration(), true, "/test"), true},
+                {new Cluster(new ServerConfiguration(), true, "/testledgers"), true},
                 {new Cluster(new ServerConfiguration(), false,"."), false},
-                {new Cluster(new ServerConfiguration(), true,"test"), false},
-                {new Cluster(null, false,"test"), false}
+                {new Cluster(new ServerConfiguration(), true,"/testledgers"), false},
+                {new Cluster(null, false,"/testledgers"), false}
 
         });
     }
