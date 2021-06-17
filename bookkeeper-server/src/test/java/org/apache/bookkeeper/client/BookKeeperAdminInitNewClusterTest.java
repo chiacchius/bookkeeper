@@ -39,7 +39,7 @@ public class BookKeeperAdminInitNewClusterTest {
         try {
 
             zk = new ZooKeeperClusterUtil(5);
-            //zk.startCluster();
+            zk.startCluster();
 
 
             System.out.println("Cluster Zookeeper inizializzato e running");
