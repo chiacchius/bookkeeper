@@ -34,7 +34,6 @@ import org.apache.bookkeeper.conf.ClientConfiguration;
 import org.apache.bookkeeper.net.BookieId;
 import org.apache.bookkeeper.proto.BookieClient;
 import org.apache.bookkeeper.proto.BookkeeperInternalCallbacks.GetBookieInfoCallback;
-import org.apache.bookkeeper.proto.BookkeeperProtocol;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,9 +46,7 @@ import org.slf4j.LoggerFactory;
 public class BookieInfoReader {
     private static final Logger LOG = LoggerFactory.getLogger(BookieInfoReader.class);
     private static final long GET_BOOKIE_INFO_REQUEST_FLAGS =
-        BookkeeperProtocol.GetBookieInfoRequest.Flags.TOTAL_DISK_CAPACITY_VALUE
-                               | BookkeeperProtocol.GetBookieInfoRequest.Flags.FREE_DISK_SPACE_VALUE;
-
+        0x01 | 0x02;
     private final ScheduledExecutorService scheduler;
     private final BookKeeper bk;
     private final ClientConfiguration conf;
@@ -326,8 +323,7 @@ public class BookieInfoReader {
         }
 
         BookieClient bkc = bk.getBookieClient();
-        final long requested = BookkeeperProtocol.GetBookieInfoRequest.Flags.TOTAL_DISK_CAPACITY_VALUE
-                               | BookkeeperProtocol.GetBookieInfoRequest.Flags.FREE_DISK_SPACE_VALUE;
+        final long requested = 0x01|0x02;
         totalSent = 0;
         completedCnt = 0;
         errorCnt = 0;
@@ -403,9 +399,7 @@ public class BookieInfoReader {
         final ConcurrentMap<BookieId, BookieInfo> map =
             new ConcurrentHashMap<BookieId, BookieInfo>();
         final CountDownLatch latch = new CountDownLatch(1);
-        long requested = BookkeeperProtocol.GetBookieInfoRequest.Flags.TOTAL_DISK_CAPACITY_VALUE
-                         | BookkeeperProtocol.GetBookieInfoRequest.Flags.FREE_DISK_SPACE_VALUE;
-
+        long requested = 0x01 | 0x02;
         Collection<BookieId> bookies;
         bookies = bk.bookieWatcher.getBookies();
         bookies.addAll(bk.bookieWatcher.getReadOnlyBookies());

@@ -1,17 +1,9 @@
 package org.apache.bookkeeper.client;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-
-import java.util.*;
-
+import org.apache.bookkeeper.conf.BookKeeperClusterTestCase;
 import org.apache.bookkeeper.conf.ServerConfiguration;
-
-import org.apache.bookkeeper.meta.zk.ZKMetadataDriverBase;
-
 import org.apache.bookkeeper.test.ZooKeeperCluster;
 import org.apache.bookkeeper.test.ZooKeeperClusterUtil;
-import org.apache.bookkeeper.util.BookKeeperConstants;
-
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -19,9 +11,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
+import java.util.Arrays;
+import java.util.Collection;
+
 
 /**
- * Test the bookkeeperAdmin method "nukeExistingCluster()"
+ * Test the bookkeeperAdmin method "initNewCluster()"
  */
 @RunWith(value = Parameterized.class)
 public class BookKeeperAdminInitNewClusterTest {
@@ -80,10 +75,10 @@ public class BookKeeperAdminInitNewClusterTest {
     public static Collection<?> getParameters(){
         return Arrays.asList(new Object[][] {
                 {new Cluster(new ServerConfiguration(), false, ""), false},
-                {new Cluster(new ServerConfiguration(), true, "/testledgers"), true},
+                {new Cluster(new ServerConfiguration(), true, "/test"), true},
                 {new Cluster(new ServerConfiguration(), false,"."), false},
-                {new Cluster(new ServerConfiguration(), true,"/testledgers"), false},
-                {new Cluster(null, false,"/testledgers"), false}
+                {new Cluster(new ServerConfiguration(), true,"test"), false},
+                {new Cluster(null, false,"test"), false}
 
         });
     }

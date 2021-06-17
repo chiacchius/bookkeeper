@@ -1,6 +1,6 @@
 package org.apache.bookkeeper.client;
 
-import org.apache.bookkeeper.test.BookKeeperClusterTestCase;
+import org.apache.bookkeeper.conf.BookKeeperClusterTestCase;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
