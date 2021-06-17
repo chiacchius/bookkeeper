@@ -2,11 +2,11 @@ dist: trusty
 language: java
 
 jdk:
-- openjdk11
+- openjdk15
 addons:
   sonarcloud:
     organization: "chiacchius"
     token:
       secure: "jPnXy7w+/i5GB2uzDRtpG5gyuIu3ICj8NG3rSU1OLfj7KhmRwkhq/obG11YBsISlC77euIVbnbzL+WiSy5PVv1QCrtdOCnwMAMqkHByQM0JKVRQyywCzXKaSmLNDImIchDN80sHbEqrR7sty+2593n02NpRBLMFFmZm0xfOqilPO5k5UwhncAAC7yunHr0vbAlxDRgNPmlUVBQXMdHZeOD3aZAZZhyu7Lyc5H12HlxQcV0QC7Ng3s+sRwSVdDHaNaK4flqxCTwuVTWIplUie+niq1n4/IMoI8KI9XkaDRN5fvghsCJ/5oVsNUQYdYWDnxL1SCtnh7uGR/AFlnT86YaUPbiFW6uTNk4yz1sHEyEen8tourbNRaTrg/Bj7yhbODThyM5bjmM3W0XTsTs+Gj+j+IOWy+WK4yJh2Ze3klMUz8xBGFxmNzlHfb8cd3PJ3s3DFn8dlPbAUKEnpKV3HiPbCBf+kdkI+fT/h3gooRXZyhGbAczRW/rZtlCaHwgUdOQ+asXDMxVHaTZz+F7chBNt2G688BanKiFxBTwJ+VCuh6AExCDYPziKiGeohqVPg6cuKXjyswKBqMQZp8RGR7g/0nmg91bxEOMXt3aW4JXHH5qCQzphyuIckMByGUVYD5DzQRk9wRn7sG6ZJjhsCqcViZzfdH5UKRh83LrBXYXE=" # encrypted value of your token
 
-install: mvn clean install -q -DskipTests=true -Dmaven.javadoc.skip=true -B -V -Djdk.tls.client.protocols="TLSv1,TLSv1.1,TLSv1.2"
+install: mvn clean install 
