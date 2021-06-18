@@ -12,54 +12,57 @@ import org.junit.runners.Parameterized;
 import java.io.ByteArrayInputStream;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
+/**
+ * Test the BookkeeperAdmin method "format()"
+ */
 @RunWith(value = Parameterized.class)
 public class BookKeeperAdminFormatTest extends BookKeeperClusterTestCase
 {
-    private BookKeeper.DigestType digestType = BookKeeper.DigestType.CRC32;
-    private static final int numOfBookies = 2;
-
-    private boolean hasValidServConf;
-    private boolean isInteractive;
-    private boolean isInteractiveYes;
-    private boolean force;
     private boolean expectedResult;
 
-    public BookKeeperAdminFormatTest(boolean hasValidServConf, boolean isInteractive, boolean isInteractiveYes, boolean force, boolean expectedResult) {
+    private final BookKeeper.DigestType digestType = BookKeeper.DigestType.CRC32;
+    private static final int numOfBookies = 2;
+
+    private final boolean hasValidServConf;
+    private final boolean isInteractive;
+    private final boolean isInteractiveYes;
+    private final boolean force;
+
+
+    public BookKeeperAdminFormatTest(boolean expectedResult, boolean hasValidServConf, boolean isInteractive, boolean isInteractiveYes, boolean force) {
 
         super(numOfBookies);
-
+        this.expectedResult = expectedResult;
 
         this.hasValidServConf = hasValidServConf;
         this.isInteractive = isInteractive;
         this.isInteractiveYes = isInteractiveYes;
         this.force = force;
-        this.expectedResult = expectedResult;
+
 
 
 
 
     }
 
-    //Parametri in input
+    //input parameters
     @Parameterized.Parameters
     public static Collection<?> getParameters(){
         return Arrays.asList(new Object[][] {
 
-                //serverConfig, isInteractive, isInteractiveYes, force, expectedresult
-                {true, true, true, true, true},
-                {true, true, false, false, false},
-                {true, true, false, false, false},
-                {false, true, false, false, false},
-                {true, false, false, true, true},
-                {true, false, false, true, true},
+                // expectedresult, serverConfig, isInteractive, isInteractiveYes, force
+                { true, true, true, true, true},
+                { false, true, true, false, false},
+                {false, true, true, false, false},
+                {false, false, true, false, false},
+                {true, true, false, false, true},
+                {true, true, false, false, true},
         });
     }
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp(){
         try {
 
             super.setUp();
@@ -69,26 +72,23 @@ public class BookKeeperAdminFormatTest extends BookKeeperClusterTestCase
             ClientConfiguration conf = new ClientConfiguration();
             conf.setMetadataServiceUri(zkUtil.getMetadataServiceUri());
 
-            /*
-             * Creazione di un servizio BookKeeper e l'aggiunta di 2 ledgers
-             */
+
+            //Creation of a BookKeeper service and the addition of 2 ledgers
+
             int numOfLedgers = 2;
             try (BookKeeper bkc = new BookKeeper(conf)) {
-                Set<Long> ledgerIds = new HashSet<>();
                 for (int n = 0; n < numOfLedgers; n++) {
                     try (LedgerHandle lh = bkc.createLedger(numOfBookies, numOfBookies, digestType, "L".getBytes())) {
-                        ledgerIds.add(lh.getId());
                         lh.addEntry("000".getBytes());
                     }
                 }
             }
-            catch( Exception e1){ e1.printStackTrace();}
+            catch( Exception e){
+                e.printStackTrace();
+            }
 
-
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception e1) {
+            e1.printStackTrace();
         }
 
     }
@@ -102,14 +102,14 @@ public class BookKeeperAdminFormatTest extends BookKeeperClusterTestCase
     @Test
     public void format() {
 
-
+        boolean result;
 
         if (isInteractive) {
             if (isInteractiveYes) System.setIn(new ByteArrayInputStream("y\n".getBytes(), 0, 2));
             else System.setIn(new ByteArrayInputStream("n\n".getBytes(), 0, 2));
         }
 
-        boolean result;
+
         try{
             if(hasValidServConf) result = BookKeeperAdmin.format(baseConf, isInteractive, force);
             else result = BookKeeperAdmin.format(null, isInteractive, force);
