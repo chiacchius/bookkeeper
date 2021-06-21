@@ -26,6 +26,9 @@ import java.util.Collection;
 import static org.apache.bookkeeper.meta.MetadataDrivers.runFunctionWithRegistrationManager;
 
 
+/**
+ * Test the BookkeeperAdmin method "InitBookie()"
+ */
 @RunWith(value = Parameterized.class)
 public class BookKeeperAdminInitBookieTest extends BookKeeperClusterTestCase{
 
