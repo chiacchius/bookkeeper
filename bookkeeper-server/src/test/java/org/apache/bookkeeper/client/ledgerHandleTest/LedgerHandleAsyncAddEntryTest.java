@@ -1,6 +1,7 @@
-package org.apache.bookkeeper.client;
+package org.apache.bookkeeper.client.ledgerHandleTest;
 
 
+import org.apache.bookkeeper.client.*;
 import org.apache.bookkeeper.conf.BookKeeperClusterTestCase;
 import org.junit.After;
 import org.junit.Assert;
@@ -19,7 +20,7 @@ import java.util.Enumeration;
  * Test the LedgerHandle method "asyncAddEntry()"
  */
 @RunWith(value = Parameterized.class)
-public class LedgerHandleAsyncAddEntryTest extends BookKeeperClusterTestCase implements AsyncCallback.AddCallback{
+public class LedgerHandleAsyncAddEntryTest extends BookKeeperClusterTestCase implements AsyncCallback.AddCallback {
 
     private boolean expectedResult;
 
@@ -29,12 +30,12 @@ public class LedgerHandleAsyncAddEntryTest extends BookKeeperClusterTestCase imp
     private int lenght;
     private AsyncCallback.AddCallback cb;
 
-    private static MySyncObject sync;       //Object ctx
+    private static SyncObject sync;       //Object ctx
 
 
     private boolean isCbValid; //if cb is valid or is null
 
-    public LedgerHandleAsyncAddEntryTest(boolean expectedRes, byte[] data, int offset, int lenght, boolean isCbValid, MySyncObject sync) {
+    public LedgerHandleAsyncAddEntryTest(boolean expectedRes, byte[] data, int offset, int lenght, boolean isCbValid, SyncObject sync) {
         super(3);
 
         this.expectedResult =expectedRes;
@@ -50,7 +51,7 @@ public class LedgerHandleAsyncAddEntryTest extends BookKeeperClusterTestCase imp
     public void setup(){
         // ledger creation
 
-        sync = new MySyncObject();
+        sync = new SyncObject();
         byte[] ledgerPassword = "pwd".getBytes();
         final BookKeeper.DigestType digestType = BookKeeper.DigestType.CRC32;
 
@@ -69,10 +70,10 @@ public class LedgerHandleAsyncAddEntryTest extends BookKeeperClusterTestCase imp
     @Override
     public void addComplete(int rc, LedgerHandle lh, long entryId, Object ctx) {
 
-        MySyncObject sync = (MySyncObject) ctx;
+        SyncObject sync = (SyncObject) ctx;
         sync.setReturnCode(rc);
         synchronized (sync) {
-            sync.counter++;
+            sync.setCounter(sync.getCounter()+1);
             sync.notify(); //notify sync if a write was completed
         }
     }
@@ -145,7 +146,7 @@ public class LedgerHandleAsyncAddEntryTest extends BookKeeperClusterTestCase imp
         // wait for all entries to be added -> writing completed
         if (expectedResult){
             synchronized (sync) {
-                while (sync.counter < 1) {
+                while (sync.getCounter() < 1) {
 
                     try {
                         sync.wait();

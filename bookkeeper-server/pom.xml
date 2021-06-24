@@ -281,11 +281,11 @@
           </targetClasses>
           <targetTests>
 
-            <param>org.apache.bookkeeper.client.LedgerHandleAsyncAddEntryTest</param>
-            <!-- <param>org.apache.bookkeeper.client.LedgerHandleAsyncReadEntriesTest</param> -->
+            <param>org.apache.bookkeeper.client.ledgerHandleTest.LedgerHandleAsyncAddEntryTest</param>
+            <!-- <param>org.apache.bookkeeper.client.ledgerHandleTest.LedgerHandleAsyncReadEntriesTest</param> -->
 
-            <param>org.apache.bookkeeper.client.BookKeeperAdminFormatTest</param>
-            <param>org.apache.bookkeeper.client.BookKeeperAdminInitBookieTest</param>
+            <param>org.apache.bookkeeper.client.bookkeeperAdminTest.BookKeeperAdminFormatTest</param>
+            <param>org.apache.bookkeeper.client.bookkeeperAdminTest.BookKeeperAdminInitBookieTest</param>
 
           </targetTests>
         </configuration>

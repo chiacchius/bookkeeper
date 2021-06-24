@@ -1,8 +1,9 @@
-package org.apache.bookkeeper.client;
+package org.apache.bookkeeper.client.bookkeeperAdminTest;
 
 
 import org.apache.bookkeeper.bookie.BookieImpl;
 
+import org.apache.bookkeeper.client.BookKeeperAdmin;
 import org.apache.bookkeeper.conf.BookKeeperClusterTestCase;
 import org.apache.bookkeeper.conf.ServerConfiguration;
 import org.apache.bookkeeper.meta.zk.ZKMetadataDriverBase;
