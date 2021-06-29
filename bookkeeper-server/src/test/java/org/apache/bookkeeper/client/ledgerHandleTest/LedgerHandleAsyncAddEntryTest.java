@@ -116,7 +116,7 @@ public class LedgerHandleAsyncAddEntryTest extends BookKeeperClusterTestCase imp
 
 
     @Test
-    public void myTest(){
+    public void asyncAddEntry(){
 
         boolean result;
 

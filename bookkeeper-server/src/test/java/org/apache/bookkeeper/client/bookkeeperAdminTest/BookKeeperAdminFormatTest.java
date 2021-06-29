@@ -55,17 +55,21 @@ public class BookKeeperAdminFormatTest extends BookKeeperClusterTestCase
         return Arrays.asList(new Object[][] {
 
                 // expectedresult, serverConfig, isInteractive, isInteractiveYes, force
-                { true, true, true, true, true},
+
+                {false, false, true, false, false}, //null, true, false
+                {true, true, false, false, true}, //serverConfig, false, true
                 { false, true, true, false, false},
+                { true, true, true, true, true},
                 {false, true, true, false, false},
-                {false, false, true, false, false},
                 {true, true, false, false, true},
-                {true, true, false, false, true},
+
         });
     }
 
     @Before
     public void setUp(){
+
+        System.out.println("starting setUp");
         try {
 
             super.setUp();
@@ -98,13 +102,16 @@ public class BookKeeperAdminFormatTest extends BookKeeperClusterTestCase
 
     @After
     public void tearDown() throws Exception{
+        System.out.println("starting tearDown");
         super.tearDown();
+        System.out.println("tearDown finished");
     }
 
 
     @Test
     public void format() {
 
+        System.out.println("starting test");
         boolean result;
 
         if (isInteractive) {
@@ -116,7 +123,6 @@ public class BookKeeperAdminFormatTest extends BookKeeperClusterTestCase
         try{
             if(hasValidServConf) result = BookKeeperAdmin.format(baseConf, isInteractive, force);
             else result = BookKeeperAdmin.format(null, isInteractive, force);
-            System.out.println("OK");
 
         } catch (Exception e) {
             result = false;
@@ -124,6 +130,7 @@ public class BookKeeperAdminFormatTest extends BookKeeperClusterTestCase
         }
 
         Assert.assertEquals(result, expectedResult);
+        System.out.println("test finished");
 
 
     }

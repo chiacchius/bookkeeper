@@ -140,7 +140,7 @@ public class LedgerHandleAsyncReadEntriesTest extends BookKeeperClusterTestCase 
     }
 
     @Test
-    public void myTest()  {
+    public void asyncReadEntries()  {
 
         boolean result;
 

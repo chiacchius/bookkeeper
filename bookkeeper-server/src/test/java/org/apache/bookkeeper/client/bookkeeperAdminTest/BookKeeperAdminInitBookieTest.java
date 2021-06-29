@@ -124,7 +124,7 @@ public class BookKeeperAdminInitBookieTest extends BookKeeperClusterTestCase{
     @Test
     public void initBookie() throws Exception {
         System.out.println("starting test");
-        boolean result = false;
+        boolean result;
 
         if (sv!=null) {
 
@@ -162,6 +162,13 @@ public class BookKeeperAdminInitBookieTest extends BookKeeperClusterTestCase{
 
             }
 
+        }else{
+            try {
+                result = BookKeeperAdmin.initBookie(sv);
+            } catch (Exception e) {
+                result =false;
+
+            }
         }
 
 
