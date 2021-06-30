@@ -56,8 +56,8 @@ public class BookKeeperAdminFormatTest extends BookKeeperClusterTestCase
 
                 // expectedresult, serverConfig, isInteractive, isInteractiveYes, force
 
-                {false, false, true, false, false}, //null, true, false
-                {true, true, false, false, true}, //serverConfig, false, true
+                {false, false, true, false, false},
+                {true, true, false, false, true},
                 { false, true, true, false, false},
                 { true, true, true, true, true},
                 {false, true, true, false, false},

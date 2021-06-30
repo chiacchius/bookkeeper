@@ -53,6 +53,7 @@ public class LedgerHandleAsyncReadEntriesTest extends BookKeeperClusterTestCase 
 
         // ledger creation
         sync = new SyncObject();
+        System.out.println("starting setUp");
         byte[] ledgerPassword = "pwd".getBytes();
         final BookKeeper.DigestType digestType = BookKeeper.DigestType.CRC32;
 
@@ -64,14 +65,13 @@ public class LedgerHandleAsyncReadEntriesTest extends BookKeeperClusterTestCase 
 
         System.out.println("Ledger created with ID: " + lh.getId());
 
-        data = new byte[]{'m', 'a', 't', 't', 'e', 'o'};
+        data = new byte[]{'t', 'e', 's', 't', 'i', 'n', 'g'};
 
         lh.asyncAddEntry(data, 0, data.length, this, sync);
         lh.asyncAddEntry(data, 0, 3, this, sync);
         lh.asyncAddEntry(data, 1, 4, this, sync);
-        lh.asyncAddEntry(data, 0, 2, this, sync);
 
-        entries=4;
+        entries=3;
 
         // wait all writings
         synchronized (sync) {
@@ -112,8 +112,18 @@ public class LedgerHandleAsyncReadEntriesTest extends BookKeeperClusterTestCase 
 
     @After
     public void tearDown() throws Exception {
-        lh.close();
+        System.out.println("starting tearDown");
+
+        try {
+            lh.close();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (BKException e) {
+            e.printStackTrace();
+        }
         super.tearDown();
+        System.out.println("tearDown finished");
+
     }
 
     @Parameterized.Parameters
@@ -125,7 +135,7 @@ public class LedgerHandleAsyncReadEntriesTest extends BookKeeperClusterTestCase 
                 //2. lastEntry > lastAddConfirmed (last add pushed)
 
 
-                //boolean expectedRes, long firstEntry, long lastEntry, boolean isCbValid, AsyncHelper.SyncObj sync
+                //boolean expectedRes, long firstEntry, long lastEntry, boolean isCbValid, SyncObject sync
 
 
                 {true, 0, entries, true, sync},
@@ -142,9 +152,10 @@ public class LedgerHandleAsyncReadEntriesTest extends BookKeeperClusterTestCase 
     @Test
     public void asyncReadEntries()  {
 
-        boolean result;
+        boolean result=true;
 
-        result = true;
+
+        System.out.println("starting test");
 
         if (isCbValid) {
             lh.asyncReadEntries(firstEntry, lastEntry, this, sync);
@@ -159,9 +170,9 @@ public class LedgerHandleAsyncReadEntriesTest extends BookKeeperClusterTestCase 
             while (!sync.isValue()) {
                 try {
                     sync.wait();
+                    System.out.println("entry read");
                 } catch (InterruptedException e) {
                     result = false;
-                    Assert.assertEquals(expectedResult, result);
                     e.printStackTrace();
                 }
             }
@@ -177,13 +188,9 @@ public class LedgerHandleAsyncReadEntriesTest extends BookKeeperClusterTestCase 
         }
 
 
-        try {
-            lh.close();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (BKException e) {
-            e.printStackTrace();
-        }
+
+        System.out.println("test finished");
+
 
     }
 }

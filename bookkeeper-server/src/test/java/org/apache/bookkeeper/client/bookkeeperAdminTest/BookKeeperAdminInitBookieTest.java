@@ -84,12 +84,16 @@ public class BookKeeperAdminInitBookieTest extends BookKeeperClusterTestCase{
     public void tearDown() throws Exception {
 
         //kill the created bookie
+        System.out.println("starting tearDown");
+
         try {
             killBookie(bookieindex);
         }catch (IndexOutOfBoundsException e){
             System.out.println("IndexOutOfBoundsException");
         }
         super.tearDown();
+        System.out.println("tearDown finished");
+
 
 
 

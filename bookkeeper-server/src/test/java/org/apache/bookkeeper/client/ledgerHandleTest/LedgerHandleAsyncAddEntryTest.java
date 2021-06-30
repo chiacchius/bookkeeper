@@ -14,6 +14,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Enumeration;
+import java.util.concurrent.TimeoutException;
 
 
 /**
@@ -51,6 +52,8 @@ public class LedgerHandleAsyncAddEntryTest extends BookKeeperClusterTestCase imp
     public void setup(){
         // ledger creation
 
+        System.out.println("starting setUp");
+
         sync = new SyncObject();
         byte[] ledgerPassword = "pwd".getBytes();
         final BookKeeper.DigestType digestType = BookKeeper.DigestType.CRC32;
@@ -81,7 +84,7 @@ public class LedgerHandleAsyncAddEntryTest extends BookKeeperClusterTestCase imp
 
     @Parameterized.Parameters
     public static Collection<?> getTestParameters() {
-        byte[] data = {'m','a','t','t','e', 'o'};
+        byte[] data = {'t','e','s','t','i','n','g'};
         return Arrays.asList(new Object[][] {
 
                 /* FALSE if :
@@ -92,14 +95,13 @@ public class LedgerHandleAsyncAddEntryTest extends BookKeeperClusterTestCase imp
 
 
 
-                //boolean expectedRes, byte[] data, int offset, int lenght, AsyncCallback.AddCallback cb, AsyncHelper.SyncObj sync
+                //boolean expectedRes, byte[] data, int offset, int lenght, boolean isCbValid, SyncObject sync
                 {true, data, 0, data.length, true, sync},
-                //{true, data, 2, data.length-2, true, sync},
+                {false, null, 0, data.length, true, sync},
                 {false, data, -1, data.length, true, sync},
                 {false, data, 2, -1, true, sync},
-                //{false, data, -1, data.length+2, true, sync},
-                {false, data, 2, 5, true, sync},
-                //{false, data, 0, data.length, false, sync}, //fallisce perche non arriva notifica di completamento al MySyncObject
+                {false, data, 0, data.length+1, true, sync},
+                //{false, data, 0, data.length, false, sync}, //it fail beacause of TimeoutException
                 {true, data, 0, data.length, true, null},
 
         });
@@ -108,8 +110,12 @@ public class LedgerHandleAsyncAddEntryTest extends BookKeeperClusterTestCase imp
     @After
     public void tearDown() throws Exception{
 
+        System.out.println("starting tearDown");
+
         lh.close();
         super.tearDown();
+        System.out.println("tearDown finished");
+
     }
 
 
@@ -119,6 +125,7 @@ public class LedgerHandleAsyncAddEntryTest extends BookKeeperClusterTestCase imp
     public void asyncAddEntry(){
 
         boolean result;
+        System.out.println("starting test");
 
         try {
             result = true;
@@ -141,7 +148,13 @@ public class LedgerHandleAsyncAddEntryTest extends BookKeeperClusterTestCase imp
         } catch (NullPointerException e){
             result= false;
             e.printStackTrace();
-        }
+        }catch (IllegalArgumentException e){
+            result=false;
+            e.printStackTrace();
+        }/*catch (TimeoutException e){
+            result=false;
+            e.printStackTrace();
+        }*/
 
         // wait for all entries to be added -> writing completed
         if (expectedResult){
@@ -161,7 +174,6 @@ public class LedgerHandleAsyncAddEntryTest extends BookKeeperClusterTestCase imp
         }
 
         Assert.assertEquals(expectedResult,result);
-        System.out.println("\nres= "+result+"      expectedRes= "+ expectedResult);
 
         //check if in the entry there is what i wrote before
 
@@ -205,6 +217,8 @@ public class LedgerHandleAsyncAddEntryTest extends BookKeeperClusterTestCase imp
 
 
         }
+        System.out.println("test finished");
+
     }
 
 
