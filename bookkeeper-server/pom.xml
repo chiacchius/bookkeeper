@@ -272,7 +272,7 @@
           <artifactId>pitest-maven</artifactId>
           <version>1.5.1</version>
         <configuration>
-          <maxMutationsPerClass>25</maxMutationsPerClass>
+          <maxMutationsPerClass>50</maxMutationsPerClass>
           <targetClasses>
 
             <param>org.apache.bookkeeper.client.LedgerHandle</param>

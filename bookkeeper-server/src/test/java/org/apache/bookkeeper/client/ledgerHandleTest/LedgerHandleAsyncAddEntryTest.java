@@ -101,7 +101,7 @@ public class LedgerHandleAsyncAddEntryTest extends BookKeeperClusterTestCase imp
                 {false, data, -1, data.length, true, sync},
                 {false, data, 2, -1, true, sync},
                 {false, data, 0, data.length+1, true, sync},
-                //{false, data, 0, data.length, false, sync}, //it fail beacause of TimeoutException
+                //{false, data, 0, data.length, false, sync}, //it fail because of TimeoutException
                 {true, data, 0, data.length, true, null},
 
         });

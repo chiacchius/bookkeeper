@@ -29,7 +29,7 @@ public class BookKeeperAdminFormatTest extends BookKeeperClusterTestCase
 
     private final boolean hasValidServConf;
     private final boolean isInteractive;
-    private final boolean isInteractiveYes;
+    private final boolean isInteractiveYes; //client answer
     private final boolean force;
 
 
